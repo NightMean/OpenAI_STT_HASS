@@ -1,6 +1,6 @@
 """Constants for the OpenAI STT integration."""
 
-DOMAIN = "openai_stt"
+DOMAIN = "openai_compatible_stt"
 
 # Configuration keys
 CONF_API_URL = "api_url"

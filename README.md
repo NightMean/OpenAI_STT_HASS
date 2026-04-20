@@ -31,7 +31,7 @@ Also works with OpenAI's hosted API and any other server that implements the [Op
 
 ### Manual
 
-1. Copy the `custom_components/openai_stt` directory into your Home Assistant `config/custom_components/` directory
+1. Copy the `custom_components/openai_compatible_stt` directory into your Home Assistant `config/custom_components/` directory
 2. **Restart** Home Assistant
 
 ## Configuration
@@ -77,7 +77,7 @@ After setup, click **Configure** on the integration card to adjust:
 
 ```yaml
 stt:
-  - platform: openai_stt
+  - platform: openai_compatible_stt
     api_key: YOUR_API_KEY  # optional for local servers
     api_url: http://192.168.1.100:8000/v1
     model: whisper-1
@@ -105,7 +105,7 @@ stt:
 1. **Can't connect** — Verify the API URL is reachable from your Home Assistant instance. For OlliteRT, ensure the phone and HA are on the same network.
 2. **Authentication errors** — Check your API key. For local servers without auth, make sure the API key field is empty.
 3. **No transcription results** — Verify the model name matches what your server offers. Check HA logs for details.
-4. **Check logs** — Go to **Settings** → **System** → **Logs** and filter for `openai_stt`.
+4. **Check logs** — Go to **Settings** → **System** → **Logs** and filter for `openai_compatible_stt`.
 
 ## License
 

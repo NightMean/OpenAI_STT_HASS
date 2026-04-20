@@ -1,5 +1,5 @@
 {
-  "domain": "openai_stt",
+  "domain": "openai_compatible_stt",
   "name": "OpenAI-Compatible Whisper STT",
   "codeowners": ["@NightMean"],
   "config_flow": true,
