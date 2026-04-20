@@ -68,9 +68,9 @@ class OpenAIHTTPClient:
         self, language: str, wav_data: bytes
     ) -> tuple[dict, FormData]:
         """Prepare headers and form data for the API request."""
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-        }
+        headers = {}
+        if self.api_key:
+            headers["Authorization"] = f"Bearer {self.api_key}"
 
         # Convert BCP 47 language code to ISO 639-1 for OpenAI API
         openai_language = _convert_language_code(language)

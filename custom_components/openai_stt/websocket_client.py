@@ -231,9 +231,10 @@ class OpenAIWebSocketClient:
 
         uri = f"{self.api_url}/realtime?intent=transcription"
         headers = {
-            "Authorization": f"Bearer {self.api_key}",
             "OpenAI-Beta": "realtime=v1",
         }
+        if self.api_key:
+            headers["Authorization"] = f"Bearer {self.api_key}"
 
         try:
             _LOGGER.debug("Opening WebSocket connection to %s", uri)

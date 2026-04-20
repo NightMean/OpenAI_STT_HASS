@@ -49,12 +49,6 @@ _LOGGER = logging.getLogger(__name__)
 CONF_TEMP = "temperature"
 DEFAULT_TEMP = DEFAULT_TEMPERATURE
 
-SUPPORTED_MODELS = [
-    "whisper-1",
-    "gpt-4o-mini-transcribe",
-    "gpt-4o-transcribe",
-]
-
 SUPPORTED_NOISE_REDUCTION = [
     None,
     "near_field",
@@ -129,14 +123,13 @@ SUPPORTED_LANGUAGES = [
     "cy-GB",  # Welsh
 ]
 
-MODEL_SCHEMA = vol.In(SUPPORTED_MODELS)
 NOISE_REDUCTION_SCHEMA = vol.In(SUPPORTED_NOISE_REDUCTION)
 
 PLATFORM_SCHEMA = cv.PLATFORM_SCHEMA.extend(
     {
-        vol.Required(CONF_API_KEY): cv.string,
+        vol.Optional(CONF_API_KEY, default=""): cv.string,
         vol.Optional(CONF_API_URL, default=DEFAULT_API_URL): cv.string,
-        vol.Optional(CONF_MODEL, default=DEFAULT_MODEL): MODEL_SCHEMA,
+        vol.Optional(CONF_MODEL, default=DEFAULT_MODEL): cv.string,
         vol.Optional(CONF_PROMPT, default=DEFAULT_PROMPT): cv.string,
         vol.Optional(CONF_TEMP, default=DEFAULT_TEMP): vol.All(vol.Coerce(float), vol.Range(min=0.0, max=1.0)),
         vol.Optional(CONF_REALTIME, default=DEFAULT_REALTIME): cv.boolean,

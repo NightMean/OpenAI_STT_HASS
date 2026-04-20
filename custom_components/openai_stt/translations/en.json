@@ -2,37 +2,39 @@
   "config": {
     "step": {
       "user": {
-        "title": "OpenAI STT Setup",
-        "description": "Enter your OpenAI API key to get started. You can configure advanced options later.",
+        "title": "OpenAI-Compatible STT Setup",
+        "description": "Configure your OpenAI-compatible speech-to-text endpoint. Works with OlliteRT, OpenAI, and any compatible server.",
         "data": {
-          "api_key": "API Key",
-          "api_url": "API URL (Advanced)",
+          "api_key": "API Key (optional)",
+          "api_url": "API URL",
+          "model": "Model Name",
           "name": "Name"
         },
         "data_description": {
-          "api_key": "Your OpenAI API key from platform.openai.com",
-          "api_url": "Custom API endpoint (leave default unless using a compatible API)",
-          "name": "A friendly name for this STT instance (e.g., 'Fast STT', 'Accurate STT')"
+          "api_key": "API key for authentication. Leave empty if your server doesn't require one (e.g., OlliteRT on local network).",
+          "api_url": "Base URL of the OpenAI-compatible API (e.g., http://192.168.1.100:8000/v1 for OlliteRT)",
+          "model": "The STT model name to use (e.g., 'whisper-1', 'moonshine-base'). Must match a model available on your server.",
+          "name": "A friendly name for this STT instance (e.g., 'OlliteRT Whisper', 'OpenAI STT')"
         }
       }
     },
     "error": {
       "invalid_auth": "Invalid API key. Please check your API key and try again.",
-      "cannot_connect": "Unable to connect to OpenAI API. Please check your API URL and network connection.",
+      "cannot_connect": "Unable to connect to the API server. Please check the API URL and ensure the server is running.",
       "unknown": "An unexpected error occurred. Please try again."
     },
     "abort": {
-      "already_configured": "This OpenAI API endpoint is already configured."
+      "already_configured": "This API endpoint is already configured."
     }
   },
   "options": {
     "step": {
       "init": {
-        "title": "OpenAI STT Options",
-        "description": "Configure OpenAI STT options",
+        "title": "STT Options",
+        "description": "Configure speech-to-text options",
         "data": {
           "friendly_name": "Friendly Name",
-          "model": "Model",
+          "model": "Model Name",
           "prompt": "Prompt (optional)",
           "temperature": "Temperature",
           "realtime": "Enable Realtime API (beta)",
@@ -40,11 +42,11 @@
         },
         "data_description": {
           "friendly_name": "A friendly name for this STT entity (e.g., 'Kitchen Voice', 'Bedroom Assistant')",
-          "model": "Transcription model to use",
-          "prompt": "Optional prompt to guide transcription",
-          "temperature": "Model temperature (0-1, affects creativity)",
-          "realtime": "Enable OpenAI Realtime API for streaming transcription",
-          "noise_reduction": "Type of noise reduction to apply"
+          "model": "The STT model name to use. Enter any model name supported by your server.",
+          "prompt": "Optional prompt to guide transcription style and vocabulary",
+          "temperature": "Model temperature (0-1). Lower is more deterministic, higher is more creative.",
+          "realtime": "Enable OpenAI Realtime API for streaming transcription (OpenAI only)",
+          "noise_reduction": "Type of noise reduction to apply (Realtime API only)"
         }
       }
     }

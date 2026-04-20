@@ -1,5 +1,5 @@
 {
-    "name": "OpenAI Whisper API",
+    "name": "OpenAI-Compatible Whisper STT",
     "homeassistant": "2024.1.0",
     "render_readme": true
 }

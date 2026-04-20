@@ -27,27 +27,30 @@ from .const import (
     DEFAULT_REALTIME,
     DEFAULT_NOISE_REDUCTION,
     DOMAIN,
-    MODELS,
     NOISE_REDUCTION_OPTIONS,
 )
 
 _LOGGER = logging.getLogger(__name__)
 
 
-async def validate_api_key(hass: HomeAssistant, api_key: str, api_url: str) -> dict[str, str]:
-    """Validate the API key by making a test request."""
+async def validate_connection(hass: HomeAssistant, api_key: str, api_url: str) -> dict[str, str]:
+    """Validate the connection by making a test request."""
     session = async_get_clientsession(hass)
 
+    headers = {}
+    if api_key:
+        headers["Authorization"] = f"Bearer {api_key}"
+
     try:
-        # Test the API key with a simple models list request
         async with session.get(
             f"{api_url}/models",
-            headers={"Authorization": f"Bearer {api_key}"},
+            headers=headers,
             timeout=aiohttp.ClientTimeout(total=10),
         ) as response:
             if response.status == 401:
                 return {"error": "invalid_auth"}
-            elif response.status != 200:
+            # Accept any successful response (some servers return different codes)
+            if response.status >= 500:
                 return {"error": "cannot_connect"}
 
             return {"title": "OpenAI STT"}
@@ -70,17 +73,16 @@ class OpenAISTTConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors: dict[str, str] = {}
 
         if user_input is not None:
-            api_key = user_input[CONF_API_KEY]
+            api_key = user_input.get(CONF_API_KEY, "")
             api_url = user_input.get(CONF_API_URL, DEFAULT_API_URL)
             name = user_input.get("name", "OpenAI STT")
+            model = user_input.get(CONF_MODEL, DEFAULT_MODEL)
 
-            # Validate the API key
-            result = await validate_api_key(self.hass, api_key, api_url)
+            result = await validate_connection(self.hass, api_key, api_url)
 
             if "error" in result:
                 errors["base"] = result["error"]
             else:
-                # Allow multiple instances - no unique_id check
                 return self.async_create_entry(
                     title=name,
                     data={
@@ -88,7 +90,7 @@ class OpenAISTTConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         CONF_API_URL: api_url,
                     },
                     options={
-                        CONF_MODEL: DEFAULT_MODEL,
+                        CONF_MODEL: model,
                         CONF_PROMPT: DEFAULT_PROMPT,
                         CONF_TEMPERATURE: DEFAULT_TEMPERATURE,
                         CONF_REALTIME: DEFAULT_REALTIME,
@@ -98,8 +100,9 @@ class OpenAISTTConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         data_schema = vol.Schema(
             {
-                vol.Required(CONF_API_KEY): str,
+                vol.Optional(CONF_API_KEY, default=""): str,
                 vol.Optional(CONF_API_URL, default=DEFAULT_API_URL): str,
+                vol.Optional(CONF_MODEL, default=DEFAULT_MODEL): str,
                 vol.Optional("name", default="OpenAI STT"): str,
             }
         )
@@ -127,13 +130,11 @@ class OpenAISTTOptionsFlow(config_entries.OptionsFlowWithConfigEntry):
     ) -> FlowResult:
         """Manage the options."""
         if user_input is not None:
-            # Update the config entry title if friendly name changed
             if "friendly_name" in user_input:
                 self.hass.config_entries.async_update_entry(
                     self.config_entry,
                     title=user_input["friendly_name"]
                 )
-                # Remove friendly_name from options as it's stored in title
                 user_input = {k: v for k, v in user_input.items() if k != "friendly_name"}
 
             return self.async_create_entry(title="", data=user_input)
@@ -154,13 +155,8 @@ class OpenAISTTOptionsFlow(config_entries.OptionsFlowWithConfigEntry):
                     CONF_MODEL,
                     default=options.get(CONF_MODEL, DEFAULT_MODEL),
                 ): selector({
-                    "select": {
-                        "options": [
-                            {"label": "GPT-4o Mini Transcribe", "value": "gpt-4o-mini-transcribe"},
-                            {"label": "GPT-4o Transcribe", "value": "gpt-4o-transcribe"},
-                            {"label": "Whisper-1", "value": "whisper-1"},
-                        ],
-                        "mode": "dropdown",
+                    "text": {
+                        "type": "text",
                     }
                 }),
                 vol.Optional(
