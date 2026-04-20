@@ -9,6 +9,7 @@ Also works with OpenAI's hosted API and any other server that implements the [Op
 ## Features
 
 - **Any OpenAI-compatible endpoint** — Point it at OlliteRT, OpenAI, LocalAI, Faster Whisper Server, or any compatible API
+- **Auto-discover models** — Automatically fetches available models from your server's `/models` endpoint, with manual text input as fallback
 - **Custom model names** — Enter any model name your server supports (e.g., `whisper-1`, `moonshine-base`, `whisper-large-v3`)
 - **Optional API key** — No key required for local servers like OlliteRT
 - **Full UI configuration** — Set up and manage everything through Home Assistant's UI
