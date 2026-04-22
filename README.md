@@ -63,7 +63,7 @@ After setup, click **Configure** on the integration card to adjust:
 3. In Home Assistant, add the integration with:
    - **API Key:** *(leave empty)*
    - **API URL:** `http://<phone-ip>:8000/v1`
-   - **Model Name:** The model name shown in OlliteRT (e.g., `whisper-1`)
+   - **Model Name:** The model name shown in OlliteRT (e.g., `Gemma-4-E2B-it`)
 
 ### Example: OpenAI Setup
 
